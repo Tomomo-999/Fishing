@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  background: #E8EFF6;
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #F0F5FA;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+button:active {
+  transform: scale(0.97);
+  transition: transform 0.08s;
+}
+
+/* ── カード共通 ─────────────────────────────── */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(15,40,70,.06), 0 4px 12px rgba(15,40,70,.04);
+  border: 1px solid rgba(46,134,193,.08);
+}
+
+/* ── セクションヘッダー ─────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 16px 10px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1C2833;
+  letter-spacing: 0.02em;
+}
+
+.section-header::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #2E86C1 0%, #1A5276 100%);
+  flex-shrink: 0;
+}
+
+/* ── スクロール非表示 ───────────────────────── */
+.scroll-x {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.scroll-x::-webkit-scrollbar { display: none; }
+
+/* ── フィルターチップ ───────────────────────── */
+.filter-chip {
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1.5px solid #E5EAF0;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  color: #566573;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-chip.active {
+  background: #2E86C1;
+  border-color: #2E86C1;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(46,134,193,.35);
+}
+
+/* ── Leaflet overrides ──────────────────────── */
+.leaflet-container { font-family: inherit; }
+.leaflet-control-zoom {
+  border-radius: 10px !important;
+  overflow: hidden;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12) !important;
+}
+.leaflet-control-zoom a {
+  background: #fff !important;
+  color: #1e293b !important;
+  border-color: #E5EAF0 !important;
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  font-size: 16px !important;
+}
