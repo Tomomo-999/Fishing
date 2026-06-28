@@ -166,7 +166,7 @@ function AddForm({ onAdd, onClose, mySpots }) {
           {/* 写真 */}
           <div>
             <label style={lbl}>写真（任意）</label>
-            <input ref={photoRef} type="file" accept="image/*" capture="environment" onChange={handlePhotoChange} style={{ display: 'none' }} />
+            <input ref={photoRef} type="file" accept="image/*" onChange={handlePhotoChange} style={{ display: 'none' }} />
             {photo ? (
               <div style={{ position: 'relative' }}>
                 <img src={photo} alt="釣果" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '10px' }} />
