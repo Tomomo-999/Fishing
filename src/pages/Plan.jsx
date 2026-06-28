@@ -199,17 +199,9 @@ const Plan = () => {
                 if (catchable.length === 0) return null;
                 return (
                   <div key={spot.id} style={{ background: '#F8F9FA', borderRadius: '10px', padding: '10px 12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                      <div>
-                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#1C2833' }}>{spot.name}</span>
-                        <span style={{ fontSize: '10px', color: '#AAB7B8', marginLeft: '6px' }}>{spot.region}</span>
-                      </div>
-                      <button
-                        onClick={() => window.open(spot.external_tide_url, '_blank', 'noopener,noreferrer')}
-                        style={{ fontSize: '10px', fontWeight: 700, color: '#2E86C1', padding: '3px 8px', border: '1px solid #2E86C1', borderRadius: '6px', background: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
-                      >
-                        釣果を見る
-                      </button>
+                    <div style={{ marginBottom: '6px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: '#1C2833' }}>{spot.name}</span>
+                      <span style={{ fontSize: '10px', color: '#AAB7B8', marginLeft: '6px' }}>{spot.region}</span>
                     </div>
                     <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                       {catchable.map(f => (
