@@ -8,6 +8,7 @@ import Spots from './pages/Spots';
 import TechniqueGuide from './pages/TechniqueGuide';
 import Plan from './pages/Plan';
 import MySpots from './pages/MySpots';
+import CatchLog from './pages/CatchLog';
 import FishingMap from './pages/FishingMap';
 import './index.css';
 
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/guide/*" element={<TechniqueGuide />} />
               <Route path="/plan/*"  element={<Plan />} />
               <Route path="/myspots/*" element={<MySpots />} />
+              <Route path="/catchlog" element={<CatchLog />} />
             </Routes>
           </Layout>
         } />

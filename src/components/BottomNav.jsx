@@ -1,12 +1,12 @@
 import { NavLink } from 'react-router-dom';
 
 const NAV_ITEMS = [
-  { to: '/',        icon: '🏠', label: 'ホーム' },
-  { to: '/fish',    icon: '🐟', label: '魚図鑑' },
-  { to: '/spots',   icon: '📍', label: '釣り場' },
-  { to: '/guide',   icon: '📖', label: 'ガイド' },
-  { to: '/plan',    icon: '📅', label: '計画' },
-  { to: '/myspots', icon: '⭐', label: 'マイ' },
+  { to: '/',          icon: '🏠', label: 'ホーム' },
+  { to: '/fish',      icon: '🐟', label: '魚図鑑' },
+  { to: '/spots',     icon: '📍', label: '釣り場' },
+  { to: '/plan',      icon: '📅', label: '計画' },
+  { to: '/catchlog',  icon: '🎣', label: '釣果' },
+  { to: '/myspots',   icon: '⭐', label: 'マイ' },
 ];
 
 const BottomNav = () => (

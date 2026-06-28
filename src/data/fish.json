@@ -12,6 +12,7 @@
     "techniques": ["nage_zuri"],
     "description": "砂浜からの投げ釣りで狙う入門魚。夏が最盛期。釣るのも捌くのも簡単な最初の1匹に最適。",
     "loss_hint": null,
+    "amazon_keywords": "投げ釣り 仕掛け キス セット",
     "best_time": ["daytime"],
     "sea_areas": ["瀬戸内海","日本海","響灘"]
   },
@@ -28,6 +29,7 @@
     "techniques": ["eging"],
     "description": "春に堤防から狙えるイカ。ズル引きで初心者でも釣れる。シャクリ不要なので初心者に最適。",
     "loss_hint": "エギは根掛かりでロストしやすい。2〜3本の予備を推奨。",
+    "amazon_keywords": "エギ コウイカ 3号 セット",
     "best_time": ["mazume_morning","mazume_evening","night"],
     "sea_areas": ["瀬戸内海","日本海"]
   },
@@ -44,6 +46,7 @@
     "techniques": ["sabiki","ajing"],
     "description": "サビキ釣りの王道。群れで回遊するため数釣りが楽しめる。釣るのは簡単だが小骨があるので捌きに慣れが必要。",
     "loss_hint": null,
+    "amazon_keywords": "サビキ 仕掛け アジ 堤防",
     "best_time": ["mazume_morning","mazume_evening","night"],
     "sea_areas": ["瀬戸内海","日本海","響灘"]
   },
@@ -60,6 +63,7 @@
     "techniques": ["sabiki"],
     "description": "サビキで大量に釣れる。鮮度が落ちやすいので釣ったらすぐ処理する。",
     "loss_hint": null,
+    "amazon_keywords": "サビキ 仕掛け イワシ アミエビ",
     "best_time": ["mazume_morning","mazume_evening"],
     "sea_areas": ["瀬戸内海","日本海","響灘"]
   },
@@ -76,6 +80,7 @@
     "techniques": ["sabiki"],
     "description": "サビキで釣れる青物。足が早いので鮮度管理に注意。",
     "loss_hint": null,
+    "amazon_keywords": "サビキ 仕掛け サバ 青物",
     "best_time": ["mazume_morning","mazume_evening"],
     "sea_areas": ["瀬戸内海","日本海","響灘"]
   },
@@ -92,6 +97,7 @@
     "techniques": ["uki_zuri"],
     "description": "細長い見た目が特徴。春と秋に堤防から狙える。",
     "loss_hint": null,
+    "amazon_keywords": "ウキ釣り 仕掛け サヨリ 堤防",
     "best_time": ["mazume_morning","daytime","mazume_evening"],
     "sea_areas": ["瀬戸内海","日本海"]
   },
@@ -108,6 +114,7 @@
     "techniques": ["eging"],
     "description": "エギングで狙う人気のイカ。春と秋が最盛期。仙崎湾での釣果実績多数。",
     "loss_hint": "エギは根掛かりやキャスト時にロストしやすい。秋シーズン前に2〜3本まとめ買い推奨。",
+    "amazon_keywords": "エギ アオリイカ エギング 秋",
     "best_time": ["mazume_morning","mazume_evening","night"],
     "sea_areas": ["日本海","瀬戸内海"]
   },
@@ -124,6 +131,7 @@
     "techniques": ["eging"],
     "description": "山口県ブランド「仙崎イカ」。夏〜秋が最盛期。センザキッチン周辺で狙える。",
     "loss_hint": "エギは消耗が早い。夜焚きでは特に複数本必須。",
+    "amazon_keywords": "エギ ケンサキイカ 夜釣り 仙崎",
     "best_time": ["mazume_morning","mazume_evening","night"],
     "sea_areas": ["日本海"]
   },
@@ -140,6 +148,7 @@
     "techniques": ["uki_zuri"],
     "description": "冬〜春が旬。夜釣りでも狙える。常夜灯周りが特に有効。",
     "loss_hint": null,
+    "amazon_keywords": "メバリング ワーム ルアー 堤防",
     "best_time": ["mazume_morning","mazume_evening","night"],
     "sea_areas": ["瀬戸内海","日本海","響灘"]
   },
@@ -156,6 +165,7 @@
     "techniques": ["nage_zuri"],
     "description": "冬〜春に砂浜から投げ釣りで狙う。カレイ専用仕掛けを使う。",
     "loss_hint": null,
+    "amazon_keywords": "投げ釣り 仕掛け カレイ 砂浜",
     "best_time": ["daytime"],
     "sea_areas": ["瀬戸内海","日本海"]
   },
@@ -172,6 +182,7 @@
     "techniques": ["fukase"],
     "description": "フカセ釣りの代表魚。上級者向け。釣り・捌きともに難易度が高い。",
     "loss_hint": null,
+    "amazon_keywords": "フカセ 仕掛け クロダイ チヌ",
     "best_time": ["mazume_morning","mazume_evening"],
     "sea_areas": ["瀬戸内海","日本海","響灘"]
   },
@@ -188,6 +199,7 @@
     "techniques": ["kago", "nagashi", "taira_ba"],
     "description": "山口県を代表する高級魚。春の桜鯛・秋の紅葉鯛が特に有名。カゴ釣りや泳がせで狙える。",
     "loss_hint": null,
+    "amazon_keywords": "カゴ釣り 仕掛け 真鯛 鯛ラバ",
     "best_time": ["mazume_morning","mazume_evening"],
     "sea_areas": ["瀬戸内海","日本海","響灘","周防灘"]
   }

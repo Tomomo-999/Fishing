@@ -198,21 +198,33 @@ const FishDetail = ({ fishId, onBack, currentMonth }) => {
         ))}
       </div>
 
-      {/* Amazon */}
-      {f.loss_hint && (
+      {/* 釣り道具をAmazonで探す */}
+      {f.amazon_keywords && (
         <>
-          <h2 className="section-header">消耗品ヒント</h2>
-          <div style={{ margin: '0 16px 8px' }} className="card">
-            <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span>⚠️</span>
-              <div style={{ flex: 1, fontSize: '12px', color: '#566573', lineHeight: 1.5 }}>{f.loss_hint}</div>
-              <button
-                onClick={() => window.open(`https://www.amazon.co.jp/s?k=${encodeURIComponent('エギ 3号 セット')}`, '_blank', 'noopener,noreferrer')}
-                style={{ fontSize: '11px', fontWeight: 700, color: '#2E86C1', padding: '6px 10px', border: '1px solid #2E86C1', borderRadius: '8px', background: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
-              >
-                Amazon PR
-              </button>
-            </div>
+          <h2 className="section-header">釣り道具を探す</h2>
+          <div style={{ margin: '0 16px 12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {f.loss_hint && (
+              <div style={{ padding: '10px 12px', background: '#FEF3CD', borderRadius: '10px', fontSize: '12px', color: '#7D6608', lineHeight: 1.6 }}>
+                ⚠️ {f.loss_hint}
+              </div>
+            )}
+            <button
+              onClick={() => window.open(`https://www.amazon.co.jp/s?k=${encodeURIComponent(f.amazon_keywords)}`, '_blank', 'noopener,noreferrer')}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '10px',
+                padding: '13px 14px', borderRadius: '10px',
+                background: '#fff', border: '1.5px solid #F0B429',
+                cursor: 'pointer', textAlign: 'left', width: '100%',
+                boxShadow: '0 1px 3px rgba(0,0,0,.05)',
+              }}
+            >
+              <span style={{ fontSize: '22px', flexShrink: 0 }}>🛒</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: '#1C2833' }}>Amazonで道具を探す <span style={{ fontSize: '10px', color: '#AAB7B8', fontWeight: 400 }}>PR</span></div>
+                <div style={{ fontSize: '11px', color: '#AAB7B8', marginTop: '2px' }}>「{f.amazon_keywords}」で検索</div>
+              </div>
+              <span style={{ fontSize: '12px', color: '#AAB7B8' }}>→</span>
+            </button>
           </div>
         </>
       )}
