@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { loadCatchLog, addCatch, deleteCatch, FISH_OPTIONS, METHOD_OPTIONS } from '../utils/catchlog';
+import { loadCatchLog, addCatch, updateCatch, deleteCatch, FISH_OPTIONS, METHOD_OPTIONS } from '../utils/catchlog';
 import { loadMySpots } from '../utils/storage';
 import spots from '../data/spots.json';
 
@@ -55,19 +55,30 @@ function shareEntry(entry) {
   }
 }
 
-// ── 追加フォーム ─────────────────────────────────────────────
-function AddForm({ onAdd, onClose, mySpots }) {
+// ── 追加/編集フォーム ─────────────────────────────────────────────
+function AddForm({ onAdd, onUpdate, onClose, mySpots, initial }) {
+  const isEdit = !!initial;
   const allSpots = [
     ...spots.map(s  => ({ id: s.id,        name: s.name })),
     ...mySpots.map(s => ({ id: `my_${s.id}`, name: `⭐ ${s.name}` })),
     { id: 'other', name: 'その他（自由入力）' },
   ];
 
+  const initSpotId = initial?.spotId || allSpots[0]?.id || '';
+  const initSpotName = initial?.spotName || allSpots[0]?.name || '';
+
   const [form, setForm] = useState({
-    date: todayStr(), spotId: allSpots[0]?.id || '', spotName: allSpots[0]?.name || '',
-    customSpot: '', fishId: 'aji', count: 1, maxSize: '', method: 'sabiki', memo: '',
+    date:       initial?.date      || todayStr(),
+    spotId:     initSpotId,
+    spotName:   initSpotName,
+    customSpot: (initial?.spotId === 'other' ? initial.spotName : '') || '',
+    fishId:     initial?.fishId    || 'aji',
+    count:      initial?.count     || 1,
+    maxSize:    initial?.maxSize   || '',
+    method:     initial?.method    || 'sabiki',
+    memo:       initial?.memo      || '',
   });
-  const [photo, setPhoto]         = useState(null);   // base64
+  const [photo, setPhoto]               = useState(initial?.photo || null);
   const [photoLoading, setPhotoLoading] = useState(false);
   const photoRef = useRef(null);
 
@@ -91,7 +102,7 @@ function AddForm({ onAdd, onClose, mySpots }) {
   const handleSubmit = () => {
     const spotName = form.spotId === 'other' ? form.customSpot : form.spotName;
     if (!spotName || !form.fishId || !form.count) return;
-    onAdd({
+    const data = {
       date:     form.date,
       spotId:   form.spotId,
       spotName,
@@ -102,7 +113,12 @@ function AddForm({ onAdd, onClose, mySpots }) {
       method:   form.method,
       memo:     form.memo.trim(),
       photo:    photo || null,
-    });
+    };
+    if (isEdit) {
+      onUpdate({ ...initial, ...data });
+    } else {
+      onAdd(data);
+    }
     onClose();
   };
 
@@ -113,7 +129,7 @@ function AddForm({ onAdd, onClose, mySpots }) {
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.45)', zIndex: 200, display: 'flex', alignItems: 'flex-end' }}>
       <div style={{ width: '100%', maxWidth: '430px', margin: '0 auto', background: '#F4F6F9', borderRadius: '20px 20px 0 0', padding: '20px 16px 40px', maxHeight: '90vh', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-          <span style={{ fontSize: '17px', fontWeight: 800, color: '#1C2833' }}>🎣 釣果を記録</span>
+          <span style={{ fontSize: '17px', fontWeight: 800, color: '#1C2833' }}>{isEdit ? '🎣 釣果を編集' : '🎣 釣果を記録'}</span>
           <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '22px', cursor: 'pointer', color: '#AAB7B8' }}>✕</button>
         </div>
 
@@ -190,7 +206,7 @@ function AddForm({ onAdd, onClose, mySpots }) {
             onClick={handleSubmit}
             style={{ width: '100%', padding: '14px', borderRadius: '12px', background: 'linear-gradient(135deg,#2E86C1,#1A5276)', color: '#fff', fontWeight: 800, fontSize: '16px', border: 'none', cursor: 'pointer', marginTop: '4px' }}
           >
-            記録する
+            {isEdit ? '更新する' : '記録する'}
           </button>
         </div>
       </div>
@@ -235,10 +251,11 @@ function PhotoViewer({ src, onClose }) {
 
 // ── メインページ ─────────────────────────────────────────────
 export default function CatchLog() {
-  const [entries,  setEntries]  = useState([]);
-  const [mySpots,  setMySpots]  = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
+  const [entries,   setEntries]   = useState([]);
+  const [mySpots,   setMySpots]   = useState([]);
+  const [showForm,  setShowForm]  = useState(false);
+  const [editEntry, setEditEntry] = useState(null);
+  const [deleteId,  setDeleteId]  = useState(null);
   const [viewPhoto, setViewPhoto] = useState(null);
 
   useEffect(() => {
@@ -248,6 +265,11 @@ export default function CatchLog() {
 
   const handleAdd = (entry) => {
     addCatch(entry);
+    setEntries(loadCatchLog());
+  };
+
+  const handleUpdate = (entry) => {
+    updateCatch(entry);
     setEntries(loadCatchLog());
   };
 
@@ -301,12 +323,18 @@ export default function CatchLog() {
                 {entry.method && <div style={{ fontSize: '12px', color: '#566573' }}>{METHOD_MAP[entry.method] || entry.method}</div>}
                 {entry.memo   && <div style={{ fontSize: '12px', color: '#7F8C8D', marginTop: '4px', fontStyle: 'italic' }}>{entry.memo}</div>}
               </div>
-              <div style={{ display: 'flex', gap: '8px', marginLeft: '8px' }}>
+              <div style={{ display: 'flex', gap: '6px', marginLeft: '8px' }}>
                 <button
                   onClick={() => shareEntry(entry)}
-                  style={{ padding: '7px 12px', borderRadius: '10px', background: '#EBF5FB', color: '#2E86C1', border: '1.5px solid #AED6F1', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+                  style={{ padding: '7px 10px', borderRadius: '10px', background: '#EBF5FB', color: '#2E86C1', border: '1.5px solid #AED6F1', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
                 >
                   シェア
+                </button>
+                <button
+                  onClick={() => setEditEntry(entry)}
+                  style={{ padding: '7px 10px', borderRadius: '10px', background: '#FEF9E7', color: '#E67E22', border: '1.5px solid #F9CA7A', fontSize: '13px', cursor: 'pointer' }}
+                >
+                  ✏️
                 </button>
                 <button
                   onClick={() => setDeleteId(entry.id)}
@@ -320,7 +348,8 @@ export default function CatchLog() {
         ))
       )}
 
-      {showForm && <AddForm onAdd={handleAdd} onClose={() => setShowForm(false)} mySpots={mySpots} />}
+      {showForm  && <AddForm onAdd={handleAdd} onClose={() => setShowForm(false)} mySpots={mySpots} />}
+      {editEntry && <AddForm initial={editEntry} onUpdate={handleUpdate} onClose={() => setEditEntry(null)} mySpots={mySpots} />}
 
       {viewPhoto && <PhotoViewer src={viewPhoto} onClose={() => setViewPhoto(null)} />}
 

@@ -20,6 +20,10 @@ export const deleteCatch = (id) => {
   saveCatchLog(loadCatchLog().filter(e => e.id !== id));
 };
 
+export const updateCatch = (entry) => {
+  saveCatchLog(loadCatchLog().map(e => e.id === entry.id ? entry : e));
+};
+
 export const FISH_OPTIONS = [
   { id: 'aji',      name: 'アジ' },
   { id: 'kisu',     name: 'シロギス' },

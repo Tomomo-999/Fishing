@@ -132,50 +132,41 @@ const SpotForm = ({ initial, onSave, onCancel }) => {
   );
 };
 
-// ─── 訪問記録追加/編集フォーム ───────────────────────────────
+// ─── 訪問メモ追加/編集フォーム ───────────────────────────────
 const VisitForm = ({ initial, onSave, onCancel }) => {
   const today = new Date().toISOString().slice(0,10);
   const [date,    setDate]    = useState(initial?.date    || today);
-  const [catchTxt,setCatchTxt]= useState(initial?.catch   || '');
-  const [rating,  setRating]  = useState(initial?.rating  ?? 0);
   const [weather, setWeather] = useState(initial?.weather || '');
   const [tide,    setTide]    = useState(initial?.tide    || '');
   const [note,    setNote]    = useState(initial?.note    || '');
 
   const handleSave = () => {
-    onSave({ id: initial?.id || genId(), date, catch: catchTxt.trim(), rating, weather, tide, note: note.trim() });
+    if (!note.trim()) return;
+    onSave({ id: initial?.id || genId(), date, weather, tide, note: note.trim() });
   };
 
   return (
     <div style={{ padding: '0 16px 16px' }}>
       <div style={{ fontSize: '15px', fontWeight: 700, color: '#1C2833', margin: '12px 0 14px' }}>
-        {initial ? '訪問記録を編集' : '訪問記録を追加'}
+        {initial ? 'メモを編集' : 'スポットメモを追加'}
       </div>
 
-      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '4px' }}>釣行日 *</label>
+      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '4px' }}>日付 *</label>
       <input
         type="date" value={date} onChange={e => setDate(e.target.value)}
         style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E5EAF0', fontSize: '14px', marginBottom: '12px', boxSizing: 'border-box' }}
       />
 
-      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '4px' }}>釣果（何が釣れた？）</label>
-      <input
-        value={catchTxt} onChange={e => setCatchTxt(e.target.value)}
-        placeholder="例：キス5匹・コウイカ1杯"
-        style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E5EAF0', fontSize: '13px', marginBottom: '12px', boxSizing: 'border-box' }}
+      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '4px' }}>メモ *</label>
+      <textarea
+        autoFocus
+        value={note} onChange={e => setNote(e.target.value)}
+        placeholder="例：駐車場は満車になりやすい&#10;東堤防の先端が好ポイント&#10;夜は常夜灯周りがいい"
+        rows={5}
+        style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E5EAF0', fontSize: '13px', marginBottom: '12px', resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.7 }}
       />
 
-      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '6px' }}>釣果評価</label>
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
-        {CATCH_RATINGS.map((r, i) => (
-          <button key={i} onClick={() => setRating(i)}
-            style={{ flex: 1, padding: '8px 4px', borderRadius: '8px', border: `2px solid ${rating === i ? '#2E86C1' : '#E5EAF0'}`, background: rating === i ? '#F0F8FF' : '#fff', fontSize: '14px', cursor: 'pointer' }}>
-            {r}
-          </button>
-        ))}
-      </div>
-
-      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '6px' }}>天気</label>
+      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '6px' }}>天気（任意）</label>
       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
         {WEATHER_OPTIONS.map(w => (
           <button key={w} onClick={() => setWeather(weather === w ? '' : w)}
@@ -185,8 +176,8 @@ const VisitForm = ({ initial, onSave, onCancel }) => {
         ))}
       </div>
 
-      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '6px' }}>潮まわり</label>
-      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
+      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '6px' }}>潮まわり（任意）</label>
+      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
         {TIDE_OPTIONS.map(t => (
           <button key={t} onClick={() => setTide(tide === t ? '' : t)}
             style={{ padding: '6px 10px', borderRadius: '8px', border: `1px solid ${tide === t ? '#2E86C1' : '#E5EAF0'}`, background: tide === t ? '#F0F8FF' : '#fff', fontSize: '12px', cursor: 'pointer', color: tide === t ? '#2E86C1' : '#566573' }}>
@@ -195,19 +186,11 @@ const VisitForm = ({ initial, onSave, onCancel }) => {
         ))}
       </div>
 
-      <label style={{ fontSize: '12px', color: '#566573', display: 'block', marginBottom: '4px' }}>メモ</label>
-      <textarea
-        value={note} onChange={e => setNote(e.target.value)}
-        placeholder="ヒットルアー・時間帯・反省点など"
-        rows={3}
-        style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E5EAF0', fontSize: '13px', marginBottom: '16px', resize: 'vertical', boxSizing: 'border-box' }}
-      />
-
       <div style={{ display: 'flex', gap: '8px' }}>
         <button onClick={onCancel} style={{ flex: 1, padding: '12px', borderRadius: '10px', border: '1px solid #E5EAF0', background: '#fff', color: '#566573', fontSize: '14px', cursor: 'pointer' }}>
           キャンセル
         </button>
-        <button onClick={handleSave} style={{ flex: 2, padding: '12px', borderRadius: '10px', border: 'none', background: '#2E86C1', color: '#fff', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
+        <button onClick={handleSave} disabled={!note.trim()} style={{ flex: 2, padding: '12px', borderRadius: '10px', border: 'none', background: note.trim() ? '#2E86C1' : '#E5EAF0', color: note.trim() ? '#fff' : '#AAB7B8', fontSize: '14px', fontWeight: 700, cursor: note.trim() ? 'pointer' : 'default' }}>
           保存
         </button>
       </div>
@@ -500,24 +483,23 @@ const SpotDetail = ({ spot, onBack, onUpdateSpot, onDeleteSpot }) => {
       )}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px 8px' }}>
-        <div style={{ fontSize: '12px', fontWeight: 700, color: '#566573' }}>訪問記録（{spot.visits.length}件）</div>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: '#566573' }}>スポットメモ（{spot.visits.length}件）</div>
         <button onClick={() => setMode('addVisit')}
           style={{ fontSize: '12px', padding: '6px 12px', borderRadius: '8px', background: '#2E86C1', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-          ＋ 追加
+          ＋ メモ追加
         </button>
       </div>
 
       {sorted.length === 0 ? (
-        <div style={{ margin: '20px 16px', textAlign: 'center', color: '#AAB7B8', fontSize: '13px' }}>
-          まだ記録がありません。釣りに行ったら記録してみましょう！
+        <div style={{ margin: '8px 16px', textAlign: 'center', color: '#AAB7B8', fontSize: '13px', padding: '16px', background: '#F8F9FA', borderRadius: '10px' }}>
+          駐車場・ポイントのコツ・気づきなどをメモしておこう
         </div>
       ) : (
         <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {sorted.map(v => (
             <div key={v.id} style={{ background: '#fff', border: '1px solid #E5EAF0', borderRadius: '10px', padding: '12px 14px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '14px', fontWeight: 700, color: '#1C2833' }}>{v.date}</span>
-                {v.rating > 0 && <span style={{ fontSize: '16px' }}>{CATCH_RATINGS[v.rating]}</span>}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#566573' }}>{v.date}</span>
                 {v.weather && <span style={{ fontSize: '11px', color: '#566573' }}>{v.weather}</span>}
                 {v.tide && <span style={{ fontSize: '11px', padding: '1px 6px', borderRadius: '99px', background: '#F0F8FF', color: '#2E86C1' }}>{v.tide}</span>}
                 <div style={{ flex: 1 }} />
@@ -526,8 +508,7 @@ const SpotDetail = ({ spot, onBack, onUpdateSpot, onDeleteSpot }) => {
                 <button onClick={() => deleteVisit(v.id)}
                   style={{ fontSize: '11px', color: '#E74C3C', background: 'none', border: '1px solid #FADBD8', borderRadius: '4px', padding: '3px 7px', cursor: 'pointer' }}>削除</button>
               </div>
-              {v.catch && <div style={{ fontSize: '13px', color: '#1C2833', marginBottom: '4px' }}>🎣 {v.catch}</div>}
-              {v.note && <div style={{ fontSize: '12px', color: '#566573', lineHeight: 1.5 }}>{v.note}</div>}
+              <div style={{ fontSize: '13px', color: '#1C2833', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>📝 {v.note}</div>
             </div>
           ))}
         </div>
@@ -726,8 +707,9 @@ const MySpots = () => {
                       <div style={{ fontSize: '15px', fontWeight: 700, color: '#1C2833', marginBottom: '3px' }}>{s.name}</div>
                       {s.note && <div style={{ fontSize: '12px', color: '#566573', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.note}</div>}
                       <div style={{ display: 'flex', gap: '8px', marginTop: '4px', fontSize: '11px', color: '#AAB7B8' }}>
-                        <span>訪問 {s.visits?.length || 0}回</span>
+                        <span>メモ {s.visits?.length || 0}件</span>
                         {lastVisit && <span>最終: {lastVisit.date}</span>}
+                        {lastVisit?.note && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>{lastVisit.note}</span>}
                       </div>
                     </div>
                     <span style={{ color: '#AAB7B8', fontSize: '16px', paddingTop: '2px' }}>›</span>
