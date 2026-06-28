@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { loadMySpots, saveMySpots, parseGmapUrl } from '../utils/storage';
+import { loadCatchLog, FISH_OPTIONS, METHOD_OPTIONS } from '../utils/catchlog';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -436,9 +438,20 @@ const AnnotationMap = ({ lat, lng, annotations, onAnnotationsChange, onPositionC
   );
 };
 
+const FISH_MAP   = Object.fromEntries(FISH_OPTIONS.map(f => [f.id, f.name]));
+const METHOD_MAP = Object.fromEntries(METHOD_OPTIONS.map(m => [m.id, m.name]));
+
 // ─── スポット詳細 ───────────────────────────────────────────
 const SpotDetail = ({ spot, onBack, onUpdateSpot, onDeleteSpot }) => {
   const [mode, setMode] = useState(null);
+  const [catchEntries, setCatchEntries] = useState([]);
+  const [viewPhoto, setViewPhoto] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const all = loadCatchLog();
+    setCatchEntries(all.filter(e => e.spotId === `my_${spot.id}`));
+  }, [spot.id]);
 
   const addVisit = (v) => { onUpdateSpot({ ...spot, visits: [v, ...spot.visits] }); setMode(null); };
   const updateVisit = (v) => { onUpdateSpot({ ...spot, visits: spot.visits.map(x => x.id === v.id ? v : x) }); setMode(null); };
@@ -519,6 +532,56 @@ const SpotDetail = ({ spot, onBack, onUpdateSpot, onDeleteSpot }) => {
           ))}
         </div>
       )}
+
+      {/* 釣果記録セクション */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 16px 8px' }}>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: '#566573' }}>釣果記録（{catchEntries.length}件）</div>
+        <button
+          onClick={() => navigate('/catchlog')}
+          style={{ fontSize: '12px', padding: '6px 12px', borderRadius: '8px', background: '#27AE60', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+        >
+          ＋ 釣果を記録
+        </button>
+      </div>
+
+      {catchEntries.length === 0 ? (
+        <div style={{ margin: '8px 16px 16px', padding: '14px', background: '#F8F9FA', borderRadius: '10px', textAlign: 'center', fontSize: '12px', color: '#AAB7B8' }}>
+          このスポットの釣果記録はまだありません<br />
+          <span style={{ fontSize: '11px' }}>釣果タブで「⭐ {spot.name}」を選択して記録できます</span>
+        </div>
+      ) : (
+        <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {catchEntries.map(e => (
+            <div key={e.id} style={{ background: '#fff', border: '1.5px solid #D5F5E3', borderRadius: '10px', overflow: 'hidden' }}>
+              {e.photo && (
+                <img
+                  src={e.photo}
+                  alt="釣果"
+                  onClick={() => setViewPhoto(e.photo)}
+                  style={{ width: '100%', height: '120px', objectFit: 'cover', cursor: 'pointer', display: 'block' }}
+                />
+              )}
+              <div style={{ padding: '10px 12px' }}>
+                <div style={{ fontSize: '12px', color: '#566573', marginBottom: '3px' }}>{e.date}</div>
+                <div style={{ fontSize: '15px', fontWeight: 700, color: '#1C2833' }}>
+                  🐟 {e.fishName}
+                  <span style={{ fontSize: '13px', color: '#27AE60', marginLeft: '6px' }}>{e.count}匹</span>
+                  {e.maxSize && <span style={{ fontSize: '11px', color: '#566573', marginLeft: '4px' }}>最大{e.maxSize}cm</span>}
+                </div>
+                {e.method && <div style={{ fontSize: '11px', color: '#566573', marginTop: '2px' }}>{METHOD_MAP[e.method] || e.method}</div>}
+                {e.memo   && <div style={{ fontSize: '11px', color: '#7F8C8D', marginTop: '3px', fontStyle: 'italic' }}>{e.memo}</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {viewPhoto && (
+        <div onClick={() => setViewPhoto(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.88)', zIndex: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <img src={viewPhoto} alt="釣果写真" style={{ maxWidth: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '10px' }} />
+        </div>
+      )}
+
       <div style={{ height: '16px' }} />
     </div>
   );
