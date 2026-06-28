@@ -6,6 +6,7 @@ import { calcFishingScore, getTideType } from '../utils/fishingScore';
 import { getTideFromMoon, getMoonIcon } from '../utils/moonTide';
 import { getSunTimes, formatTime } from '../utils/sunTime';
 import { fetchJmaWeather, getWeatherScore } from '../utils/jmaWeather';
+import { loadMySpots } from '../utils/storage';
 
 const LAT = 34.18, LNG = 131.47;
 const DAY_NAMES = ['日', '月', '火', '水', '木', '金', '土'];
@@ -24,6 +25,7 @@ const Plan = () => {
   const [weatherMap, setWeatherMap] = useState({});
   const [weatherError, setWeatherError] = useState(false);
   const [weatherLoading, setWeatherLoading] = useState(true);
+  const [mySpots, setMySpots] = useState([]);
   const detailRef = useRef(null);
 
   // JMA天気データを取得
@@ -32,6 +34,9 @@ const Plan = () => {
       .then(map => { setWeatherMap(map); setWeatherLoading(false); })
       .catch(() => { setWeatherError(true); setWeatherLoading(false); });
   }, []);
+
+  // マイスポットを読み込む
+  useEffect(() => { setMySpots(loadMySpots()); }, []);
 
   const days = useMemo(() => Array.from({ length: 14 }, (_, i) => {
     const d = new Date(today);
@@ -184,6 +189,7 @@ const Plan = () => {
               📍 スポット別・今月の釣れる魚
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+              {/* 公式スポット */}
               {spotsData.map(spot => {
                 const month = selected.date.getMonth() + 1;
                 const catchable = spot.fish_ids
@@ -216,6 +222,40 @@ const Plan = () => {
                         </span>
                       ))}
                     </div>
+                  </div>
+                );
+              })}
+
+              {/* マイスポット */}
+              {mySpots.map(spot => {
+                const lastVisit = spot.visits?.length
+                  ? [...spot.visits].sort((a, b) => b.date.localeCompare(a.date))[0]
+                  : null;
+                return (
+                  <div key={spot.id} style={{ background: '#FEF9E7', border: '1.5px solid #F4D03F', borderRadius: '10px', padding: '10px 12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#1C2833' }}>{spot.name}</span>
+                        <span style={{ fontSize: '10px', fontWeight: 700, color: '#B7770D', background: '#FEF3CD', padding: '1px 6px', borderRadius: '99px' }}>⭐ マイスポット</span>
+                      </div>
+                    </div>
+                    {lastVisit ? (
+                      <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                        {lastVisit.catch && (
+                          <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '99px', fontWeight: 600, background: '#FDEBD0', color: '#A04000' }}>
+                            🎣 {lastVisit.catch}
+                          </span>
+                        )}
+                        <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '99px', background: '#FEF9E7', color: '#B7770D' }}>
+                          最終釣行: {lastVisit.date}
+                        </span>
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: '11px', color: '#AAB7B8' }}>まだ釣行記録がありません</div>
+                    )}
+                    {spot.note && (
+                      <div style={{ fontSize: '11px', color: '#7D6608', marginTop: '4px' }}>📝 {spot.note}</div>
+                    )}
                   </div>
                 );
               })}
